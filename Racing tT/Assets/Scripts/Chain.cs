@@ -20,7 +20,7 @@ public class Chain : ScriptableObject
 
     public Transform GetSpawnPoint(Vector3 offset)
     {
-        return prefab.GetComponent<Module>().GetSpawnPoint(offset);
+        return prefab.GetChild(0).GetComponent<Module>().GetSpawnPoint(offset);
     }
 
 }

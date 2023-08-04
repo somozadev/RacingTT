@@ -1482,11 +1482,19 @@ MonoBehaviour:
   maxSteeringAngle: 30
   rb: {fileID: 6188217011277614358}
   carSuspension: {fileID: 6188217011277614355}
-  acceleration: 50
-  turnForce: 30
-  maxSpeed: 360
-  maxAngularVelocity: 60
-  grip: 4
+  carStats:
+    type: 1
+    acceleration: 0
+    turnForce: 0
+    maxSpeed: 0
+    maxAngularVelocity: 0
+    grip: 0
+    minVelForDrift: 0.5
+    driftAcc: 0
+    maxDriftSpeed: 0
+    driftTurnForce: 0
+    maxDriftAngularVelocity: 0
+    driftGrip: 0
   skidmarks:
   - {fileID: 6188217010844717873}
   - {fileID: 6188217010180940104}
@@ -1496,12 +1504,7 @@ MonoBehaviour:
   isDrivingForward: 1
   isTricksEnabled: 0
   skidmarksActive: 1
-  minVelForDrift: 0.5
-  driftAcc: 65
-  maxDriftSpeed: 400
-  driftTurnForce: 30
-  maxDriftAngularVelocity: 70
-  m_DriftGrip: 6
+  driftGrip: 0
   accelerationInput: 0
   reverseInput: 0
   resetInput: 0
