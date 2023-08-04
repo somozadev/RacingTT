@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec74f2a9bf76d46428242ac482029e47, type: 3}
   m_Name: 2
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  chains: []
+  prefab: {fileID: 7322738325533390590, guid: c0ed3b5b72129e04fa822875699097b9, type: 3}
+  chains:
+  - {fileID: 11400000, guid: 2d672a72e71488e4b99e2700599cee71, type: 2}
+  - {fileID: 11400000, guid: ae8d1a1d6f6730f4ea57aba8ada46835, type: 2}
+  - {fileID: 11400000, guid: d1713bf29e22ed2428038cf0bc204d2c, type: 2}
+  - {fileID: 11400000, guid: bd24903442dfc0c43a1870572bce1e9f, type: 2}
+  - {fileID: 11400000, guid: 1825aa9a2e257c844813329d69483349, type: 2}

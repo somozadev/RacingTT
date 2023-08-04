@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d0468fe33a41324ead39354ee6ee72e, type: 3}
   m_Name: New LevelTarkovChain
   m_EditorClassIdentifier: 
-  chains: []
+  chains:
+  - {fileID: 11400000, guid: 2d672a72e71488e4b99e2700599cee71, type: 2}
+  - {fileID: 11400000, guid: d7c6675424b966346ab2380d39002689, type: 2}
+  - {fileID: 11400000, guid: ae8d1a1d6f6730f4ea57aba8ada46835, type: 2}
+  - {fileID: 11400000, guid: bd24903442dfc0c43a1870572bce1e9f, type: 2}
+  - {fileID: 11400000, guid: d1713bf29e22ed2428038cf0bc204d2c, type: 2}
+  - {fileID: 11400000, guid: 1825aa9a2e257c844813329d69483349, type: 2}
