@@ -352,6 +352,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 094b6f7a30778ea449c1814f7a3b5fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modulesAmount: 15
+  carPrefab: {fileID: 8501321307682643387, guid: eccd45daec171c14fa20c5af55d96250,
+    type: 3}
   grid: {fileID: 1623681456}
   chain: {fileID: 11400000, guid: f53caeea92d2def43ac0741ab761c9ba, type: 2}
   startModule: {fileID: 8597152303040362933, guid: a4fdc12436f661f46806b1cd3a28fe2b,
