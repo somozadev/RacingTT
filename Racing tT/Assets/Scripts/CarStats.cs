@@ -17,9 +17,24 @@ public class CarStats
     public float maxDriftSpeed;
     public float driftTurnForce;
     public float maxDriftAngularVelocity;
-
     public float driftGrip;
 
+
+    private float initialGrip;
+    private float initialDriftGrip;
+    public void SetGrip(float gripValue, float driftGripValue)
+    {
+        initialGrip = grip;
+        initialDriftGrip = driftGripValue;
+        grip = gripValue;
+        driftGrip = driftGripValue;
+    }
+
+    public void ResetGrip()
+    {
+        grip = initialGrip;
+        driftGrip = initialDriftGrip;
+    }
     public void SetDefaultValues()
     {
         type = CarStatsType.Default;
@@ -33,6 +48,7 @@ public class CarStats
         maxDriftSpeed = 400;
         driftTurnForce = 30;
         maxDriftAngularVelocity = 70;
+        driftGrip = 5;
     }
     public void SetAlbertoDefaultValues()
     {
@@ -47,6 +63,7 @@ public class CarStats
         maxDriftSpeed = 400;
         driftTurnForce = 30;
         maxDriftAngularVelocity = 30;
+        driftGrip = 5;
     }
 
     public void SaveCarStatsToJson()
@@ -69,6 +86,7 @@ public class CarStats
         }
         else
         {
+            SaveCarStatsToJson();
             Debug.LogError("File not found: " + filePath);
         }
     }
