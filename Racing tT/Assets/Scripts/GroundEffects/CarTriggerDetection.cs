@@ -4,14 +4,29 @@ namespace GroundEffects
 {
     public class CarTriggerDetection : MonoBehaviour
     {
-        protected virtual void OnTriggerEnter(Collider other)
+        protected delegate void TriggerEnterEventHandler(Collider other);
+
+        protected delegate void TriggerExitEventHandler(Collider other);
+
+        protected event TriggerEnterEventHandler TriggerEnterEvent;
+        protected event TriggerExitEventHandler TriggerExitEvent;
+
+        private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (other.CompareTag("Player"))
+            {
+                Debug.Log(gameObject.name + " enter!");
+                TriggerEnterEvent?.Invoke(other);
+            }
         }
 
-        protected virtual void OnTriggerExit(Collider other)
+        private void OnTriggerExit(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (other.CompareTag("Player"))
+            {
+                Debug.Log(gameObject.name + " exit!");
+                TriggerExitEvent?.Invoke(other);
+            }
         }
     }
 }

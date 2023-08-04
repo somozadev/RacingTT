@@ -12,10 +12,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private List<Transform> frontWheels;
     [SerializeField] private float maxSteeringAngle = 30f;
 
-    [SerializeField] private Rigidbody rb;
     [SerializeField] private CarSuspension carSuspension;
     [SerializeField] private CarStats carStats;
-    
+
     [SerializeField] private List<TrailRenderer> skidmarks;
     [SerializeField] private CarControlsInputActions carControls;
 
@@ -23,7 +22,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private bool isDrivingForward;
     [SerializeField] private bool isTricksEnabled;
     [SerializeField] private bool skidmarksActive;
-    
+
+    public bool canSteer { get; set; }
+
     [SerializeField] private float driftGrip;
 
     [SerializeField] private float accelerationInput;
@@ -34,10 +35,12 @@ public class CarController : MonoBehaviour
     public float driftVal { get; private set; }
     public float speedVal { get; private set; }
     public bool isDrifting { get; private set; }
+    public Rigidbody rb { get; private set; }
+
+    public CarStats CarStats => carStats;
 
     private void OnDisable()
     {
-        
         carControls.Disable();
     }
 
@@ -48,8 +51,9 @@ public class CarController : MonoBehaviour
 
     private void Awake()
     {
+        canSteer = true;
         carStats.LoadCarStats();
-        
+        rb = GetComponent<Rigidbody>();
         carControls = new CarControlsInputActions();
         carControls.CarControls.Reseting.started += delegate { ResetCar(); };
         carControls.CarControls.Lights.started += delegate { ToggleLights(); };
@@ -60,7 +64,11 @@ public class CarController : MonoBehaviour
         accelerationInput = carControls.CarControls.Acceleration.ReadValue<float>();
         reverseInput = carControls.CarControls.ReverseAcceleration.ReadValue<float>();
         resetInput = carControls.CarControls.Reseting.ReadValue<float>();
-        steeringInput = carControls.CarControls.Steering.ReadValue<Vector2>();
+        if (canSteer)
+            steeringInput = carControls.CarControls.Steering.ReadValue<Vector2>();
+        else
+            steeringInput = Vector2.zero;
+
         RotateFrontWheels();
     }
 

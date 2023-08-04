@@ -7,10 +7,20 @@ namespace GroundEffects
     {
         [SerializeField] private TimeController timeController;
 
-        protected override void OnTriggerEnter(Collider other)
+        private void OnEnable()
         {
-            base.OnTriggerEnter(other);
+            TriggerEnterEvent += ApplyEffect;
+        }
+
+        private void OnDisable()
+        {
+            TriggerEnterEvent -= ApplyEffect;
+        }
+
+        private void ApplyEffect(Collider other)
+        {
             timeController.StopTimer();
         }
+
     }
 }
