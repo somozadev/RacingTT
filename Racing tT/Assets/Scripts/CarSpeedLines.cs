@@ -6,8 +6,8 @@ namespace DefaultNamespace
     public class CarSpeedLines : MonoBehaviour
     {
         [SerializeField] private ParticleSystem speedLines;
-        private ParticleSystem.EmissionModule _partEmission;
-        private ParticleSystem.ShapeModule _shapeModule;
+        private ParticleSystem.EmissionModule partEmission;
+        private ParticleSystem.ShapeModule shapeModule;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private float maxEmission = 185f;
         [SerializeField] private float minVelocity = 28f;
@@ -18,8 +18,8 @@ namespace DefaultNamespace
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            _partEmission = speedLines.emission;
-            _shapeModule = speedLines.shape;
+            partEmission = speedLines.emission;
+            shapeModule = speedLines.shape;
         }
 
         private void Update()
@@ -32,12 +32,12 @@ namespace DefaultNamespace
             if (rb.velocity.magnitude >= minVelocity)
             {
                 var t = Mathf.InverseLerp(minVelocity, maxVelocity, rb.velocity.magnitude);
-                _partEmission.rateOverTime = (maxEmission * rb.velocity.magnitude) / maxVelocity;
-                _shapeModule.radius = Mathf.Lerp(minRadius, maxRadius, t);
+                partEmission.rateOverTime = (maxEmission * rb.velocity.magnitude) / maxVelocity;
+                shapeModule.radius = Mathf.Lerp(minRadius, maxRadius, t);
             }
             else
             {
-                _partEmission.rateOverTime = 0;
+                partEmission.rateOverTime = 0;
             }
         }
     }

@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
@@ -18,13 +14,8 @@ public class CarController : MonoBehaviour
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private CarSuspension carSuspension;
-
-    [SerializeField] private float acceleration;
-    [SerializeField] private float turnForce;
-    [SerializeField] private float maxSpeed;
-    [SerializeField] private float maxAngularVelocity;
-    [SerializeField] private float grip;
-
+    [SerializeField] private CarStats carStats;
+    
     [SerializeField] private List<TrailRenderer> skidmarks;
     [SerializeField] private CarControlsInputActions carControls;
 
@@ -32,14 +23,8 @@ public class CarController : MonoBehaviour
     [SerializeField] private bool isDrivingForward;
     [SerializeField] private bool isTricksEnabled;
     [SerializeField] private bool skidmarksActive;
-
-    [SerializeField] private float minVelForDrift = 0.5f;
-    [SerializeField] private float driftAcc;
-    [SerializeField] private float maxDriftSpeed;
-    [SerializeField] private float driftTurnForce;
-    [SerializeField] private float maxDriftAngularVelocity;
-
-    [SerializeField] private float m_DriftGrip;
+    
+    [SerializeField] private float driftGrip;
 
     [SerializeField] private float accelerationInput;
     [SerializeField] private float reverseInput;
@@ -52,6 +37,7 @@ public class CarController : MonoBehaviour
 
     private void OnDisable()
     {
+        
         carControls.Disable();
     }
 
@@ -62,6 +48,8 @@ public class CarController : MonoBehaviour
 
     private void Awake()
     {
+        carStats.LoadCarStats();
+        
         carControls = new CarControlsInputActions();
         carControls.CarControls.Reseting.started += delegate { ResetCar(); };
         carControls.CarControls.Lights.started += delegate { ToggleLights(); };
@@ -144,13 +132,13 @@ public class CarController : MonoBehaviour
             Debug.DrawLine(transform.position, transform.position + rb.velocity.normalized * 100, Color.red);
             if (accelerationInput > 0f)
             {
-                float num = (isDrifting ? driftAcc : acceleration);
+                float num = (isDrifting ? carStats.driftAcc : carStats.acceleration);
                 rb.AddForce(vector * num * accelerationInput, ForceMode.Acceleration);
             }
 
             if (reverseInput > 0f)
             {
-                float num2 = (isDrifting ? driftAcc : acceleration);
+                float num2 = (isDrifting ? carStats.driftAcc : carStats.acceleration);
                 if (rb.velocity.magnitude > 0)
                     rb.AddForce(-vector * num2 * reverseInput, ForceMode.Acceleration);
                 if (rb.velocity.magnitude < 0)
@@ -158,7 +146,7 @@ public class CarController : MonoBehaviour
             }
 
             isDrivingForward = Vector3.Angle(rb.velocity, vector) < Vector3.Angle(rb.velocity, -vector);
-            float num3 = (isDrifting ? maxDriftSpeed : maxSpeed);
+            float num3 = (isDrifting ? carStats.maxDriftSpeed : carStats.maxSpeed);
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, num3);
             speedVal = Mathf.InverseLerp(0f, num3, rb.velocity.magnitude);
             if (carSuspension.isGrounded)
@@ -169,17 +157,17 @@ public class CarController : MonoBehaviour
                     steeringInput = -steeringInput;
                 }
 
-                float num4 = (isDrifting ? driftTurnForce : turnForce);
+                float num4 = (isDrifting ? carStats.driftTurnForce : carStats.turnForce);
                 rb.AddTorque(transform.up * steeringInput.x * num4, ForceMode.Acceleration);
-                float num5 = (isDrifting ? maxDriftAngularVelocity : maxAngularVelocity);
+                float num5 = (isDrifting ? carStats.maxDriftAngularVelocity : carStats.maxAngularVelocity);
                 rb.angularVelocity = new Vector3(rb.angularVelocity.x, num5 * steeringInput.x, rb.angularVelocity.z);
             }
 
             float value = Vector3.SignedAngle(rb.velocity, base.transform.forward, Vector3.up);
             driftVal = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(-80f, 80f, value));
-            if (rb.velocity.magnitude > minVelForDrift)
+            if (rb.velocity.magnitude > carStats.minVelForDrift)
             {
-                rb.AddForce(transform.right * driftVal * (isDrifting ? m_DriftGrip : grip),
+                rb.AddForce(transform.right * driftVal * (isDrifting ? driftGrip : carStats.grip),
                     ForceMode.Acceleration);
             }
 
@@ -197,10 +185,10 @@ public class CarController : MonoBehaviour
             if (accelerationInput > 0f)
             {
                 if (steeringInput.x > 0.3f || steeringInput.x < -0.3f)
-                    rb.AddTorque(transform.up * steeringInput.x * (acceleration / 5) * accelerationInput,
+                    rb.AddTorque(transform.up * steeringInput.x * (carStats.acceleration / 5) * accelerationInput,
                         ForceMode.Acceleration);
                 if (steeringInput.y > 0.3f || steeringInput.y < -0.3f)
-                    rb.AddTorque(transform.right * steeringInput.y * (acceleration / 2.5f) * accelerationInput,
+                    rb.AddTorque(transform.right * steeringInput.y * (carStats.acceleration / 2.5f) * accelerationInput,
                         ForceMode.Acceleration);
             }
         }
