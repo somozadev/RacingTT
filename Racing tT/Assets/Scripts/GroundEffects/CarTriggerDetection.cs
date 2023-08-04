@@ -13,7 +13,7 @@ namespace GroundEffects
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("PlayerSensor"))
             {
                 Debug.Log(gameObject.name + " enter!");
                 TriggerEnterEvent?.Invoke(other);
@@ -22,7 +22,7 @@ namespace GroundEffects
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("PlayerSensor"))
             {
                 Debug.Log(gameObject.name + " exit!");
                 TriggerExitEvent?.Invoke(other);
