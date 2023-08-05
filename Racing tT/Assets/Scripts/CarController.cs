@@ -16,6 +16,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private CarStats carStats;
 
     [SerializeField] private List<TrailRenderer> skidmarks;
+    [SerializeField] private List<TrailRenderer> airmarks;
     [SerializeField] private CarControlsInputActions carControls;
 
     [SerializeField] private bool isDrivingEnabled;
@@ -24,6 +25,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private bool skidmarksActive;
 
     public bool canSteer { get; set; }
+    public bool canAccel { get; set; }
 
     [SerializeField] private float driftGrip;
 
@@ -51,7 +53,9 @@ public class CarController : MonoBehaviour
 
     private void Awake()
     {
+        isTricksEnabled = true;
         canSteer = true;
+        canAccel = true;
         carStats.LoadCarStats();
         rb = GetComponent<Rigidbody>();
         carControls = new CarControlsInputActions();
@@ -107,126 +111,205 @@ public class CarController : MonoBehaviour
         }
     }
 
-    private void CalculateDrift()
-    {
-        driftAngle = isDrivingForward
-            ? Vector3.Angle(transform.forward, rb.velocity)
-            : Vector3.Angle(-transform.forward, rb.velocity);
-
-        if (driftAngle > 50f && driftAngle < 180f && rb.velocity.magnitude > 14f)
-            StartDrift();
-        else
-            EndDrift();
-    }
 
     private void FixedUpdate()
     {
-        CalculateDrift();
-
-
         if (!isDrivingEnabled)
             return;
+        CalculateDrift();
+        ExtraGravity();
+        Vector3 direction = CalculateDirection();
+        CalculateMovement(direction);
+        CalculateAirLines();
+        CalculateRotation();
+        CalculateAirTricks();
+        velocity = rb.velocity;
+    }
+
+    private void CalculateRotation()
+    {
         if (carSuspension.isGrounded)
         {
-            Vector3 vector = transform.forward;
-            if (Physics.Raycast(transform.position, -transform.up, out var hitInfo, 100f))
+            steeringInput *= speedVal;
+            if (!isDrivingEnabled)
             {
-                Debug.DrawLine(transform.position, hitInfo.point, Color.cyan);
-                vector = Quaternion.AngleAxis(Vector3.SignedAngle(transform.up, hitInfo.normal, transform.right),
-                    transform.right) * transform.forward;
-                Debug.DrawLine(transform.position, transform.position + vector * 50f, Color.green);
+                steeringInput = -steeringInput;
             }
 
-            Debug.DrawLine(transform.position, transform.position + rb.velocity.normalized * 100, Color.red);
+            float num4 = (isDrifting ? carStats.driftTurnForce : carStats.turnForce);
+            rb.AddTorque(transform.up * steeringInput.x * num4, ForceMode.Acceleration);
+            float num5 = (isDrifting ? carStats.maxDriftAngularVelocity : carStats.maxAngularVelocity);
+            rb.angularVelocity = new Vector3(rb.angularVelocity.x, num5 * steeringInput.x, rb.angularVelocity.z);
+        }
+
+        float value = Vector3.SignedAngle(rb.velocity, base.transform.forward, Vector3.up);
+        driftVal = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(-80f, 80f, value));
+        if (rb.velocity.magnitude > carStats.minVelForDrift)
+        {
+            rb.AddForce(transform.right * driftVal * (isDrifting ? driftGrip : carStats.grip),
+                ForceMode.Acceleration);
+        }
+    }
+
+    private Vector3 accelerationDirection;
+
+    private void CalculateMovement(Vector3 direction)
+    {
+        if (!canAccel) return;
+
+        if (carSuspension.isGrounded)
+        {
             if (accelerationInput > 0f)
             {
                 float num = (isDrifting ? carStats.driftAcc : carStats.acceleration);
-                rb.AddForce(vector * num * accelerationInput, ForceMode.Acceleration);
+                rb.AddForce(direction * num * accelerationInput, ForceMode.Acceleration);
             }
 
             if (reverseInput > 0f)
             {
                 float num2 = (isDrifting ? carStats.driftAcc : carStats.acceleration);
                 if (rb.velocity.magnitude > 0)
-                    rb.AddForce(-vector * num2 * reverseInput, ForceMode.Acceleration);
+                    rb.AddForce(-direction * num2 * reverseInput, ForceMode.Acceleration);
                 if (rb.velocity.magnitude < 0)
-                    rb.AddForce(vector * num2 * reverseInput, ForceMode.Acceleration);
+                    rb.AddForce(direction * num2 * reverseInput, ForceMode.Acceleration);
             }
 
-            isDrivingForward = Vector3.Angle(rb.velocity, vector) < Vector3.Angle(rb.velocity, -vector);
-            float num3 = (isDrifting ? carStats.maxDriftSpeed : carStats.maxSpeed);
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, num3);
-            speedVal = Mathf.InverseLerp(0f, num3, rb.velocity.magnitude);
-            if (carSuspension.isGrounded)
+            accelerationDirection = direction.normalized;
+        }
+        else // Car is in the air
+        {
+            if (accelerationInput > 0f)
             {
-                steeringInput *= speedVal;
-                if (!isDrivingEnabled)
-                {
-                    steeringInput = -steeringInput;
-                }
+                float num = (isDrifting ? carStats.driftAcc : carStats.acceleration);
 
-                float num4 = (isDrifting ? carStats.driftTurnForce : carStats.turnForce);
-                rb.AddTorque(transform.up * steeringInput.x * num4, ForceMode.Acceleration);
-                float num5 = (isDrifting ? carStats.maxDriftAngularVelocity : carStats.maxAngularVelocity);
-                rb.angularVelocity = new Vector3(rb.angularVelocity.x, num5 * steeringInput.x, rb.angularVelocity.z);
-            }
-
-            float value = Vector3.SignedAngle(rb.velocity, base.transform.forward, Vector3.up);
-            driftVal = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(-80f, 80f, value));
-            if (rb.velocity.magnitude > carStats.minVelForDrift)
-            {
-                rb.AddForce(transform.right * driftVal * (isDrifting ? driftGrip : carStats.grip),
-                    ForceMode.Acceleration);
-            }
-
-            if (!skidmarksActive && isDrifting)
-            {
-                skidmarksActive = true;
-                foreach (TrailRenderer skidmarkRenderer in skidmarks)
-                {
-                    skidmarkRenderer.emitting = true;
-                }
+                // Usar la dirección de aceleración almacenada mientras está en el suelo
+                rb.AddForce(accelerationDirection * num * accelerationInput, ForceMode.Acceleration);
             }
         }
-        else if (isTricksEnabled)
+
+        isDrivingForward = Vector3.Angle(rb.velocity, direction) < Vector3.Angle(rb.velocity, -direction);
+        float num3 = (isDrifting ? carStats.maxDriftSpeed : carStats.maxSpeed);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, num3);
+        speedVal = Mathf.InverseLerp(0f, num3, rb.velocity.magnitude);
+    }
+
+    private Vector3 CalculateDirection()
+    {
+        Vector3 direction = transform.forward;
+
+        if (carSuspension.isGrounded) //adapts car forward to the current surface the car is in.
+        {
+            if (Physics.Raycast(transform.position, -transform.up, out var hitInfo, 100f))
+                direction = Quaternion.AngleAxis(Vector3.SignedAngle(transform.up, hitInfo.normal, transform.right),
+                    transform.right) * transform.forward;
+        }
+
+        return direction;
+    }
+
+    [SerializeField] private float downwardForce = Physics.gravity.magnitude;
+
+    private void ExtraGravity()
+    {
+        if (!carSuspension.isGrounded)
+        {
+            Vector3 downDirection = -Physics.gravity.normalized;
+            float upwardDotProduct = Vector3.Dot(transform.up, downDirection);
+            if (upwardDotProduct < 0.979999f)
+            {
+                rb.AddForce(downDirection * downwardForce, ForceMode.Acceleration);
+                canAccel = false;
+            }
+            else
+                rb.AddForce(downDirection * downwardForce / 10, ForceMode.Acceleration);
+        }
+        else
+            canAccel = true;
+    }
+
+    private void CalculateAirTricks()
+    {
+        if (isTricksEnabled && !carSuspension.isGrounded)
         {
             if (accelerationInput > 0f)
             {
                 if (steeringInput.x > 0.3f || steeringInput.x < -0.3f)
                     rb.AddTorque(transform.up * steeringInput.x * (carStats.acceleration / 5) * accelerationInput,
                         ForceMode.Acceleration);
-                if (steeringInput.y > 0.3f || steeringInput.y < -0.3f)
-                    rb.AddTorque(transform.right * steeringInput.y * (carStats.acceleration / 2.5f) * accelerationInput,
-                        ForceMode.Acceleration);
+                // if (steeringInput.y > 0.3f || steeringInput.y < -0.3f)
+                //     rb.AddTorque(transform.right * steeringInput.y * (carStats.acceleration / 2.5f) * accelerationInput,
+                //         ForceMode.Acceleration);
             }
         }
-        else if (skidmarksActive && isDrifting)
+    }
+
+
+    private void CalculateDrift()
+    {
+        if (!skidmarksActive)
         {
-            skidmarksActive = false;
-            foreach (TrailRenderer skidmarkRenderer2 in skidmarks)
+            isDrifting = false;
+            foreach (TrailRenderer skidmarkRenderer in skidmarks)
+                skidmarkRenderer.emitting = false;
+        }
+
+        driftAngle = isDrivingForward
+            ? Vector3.Angle(transform.forward, rb.velocity)
+            : Vector3.Angle(-transform.forward, rb.velocity);
+        int i = 0;
+        foreach (TrailRenderer skidmarkRenderer in skidmarks)
+        {
+            if (driftAngle > 50f && driftAngle < 180f && rb.velocity.magnitude > 14f)
             {
-                skidmarkRenderer2.emitting = false;
+                if (carSuspension.IndividualGrounded[i])
+                {
+                    skidmarkRenderer.emitting = true;
+                    skidmarkRenderer.time = 1;
+                }
+                else
+                {
+                    skidmarkRenderer.emitting = false;
+                    skidmarkRenderer.time = 0;
+                }
+            }
+            else
+            {
+                skidmarkRenderer.emitting = false;
+                skidmarkRenderer.time = 1;
+            }
+
+            i++;
+        }
+    }
+
+    private void CalculateAirLines()
+    {
+        if (!carSuspension.isGrounded)
+        {
+            if (rb.velocity.magnitude > 8f)
+            {
+                foreach (var airLine in airmarks)
+                {
+                    airLine.emitting = true;
+                    airLine.time = 1;
+                }
+            }
+            else
+            {
+                foreach (var airLine in airmarks)
+                {
+                    airLine.emitting = false;
+                    airLine.time = 0;
+                }
             }
         }
-
-        velocity = rb.velocity;
-    }
-
-    private void StartDrift()
-    {
-        isDrifting = true;
-        foreach (TrailRenderer skidmarkRenderer in skidmarks)
+        else
         {
-            skidmarkRenderer.emitting = true;
-        }
-    }
-
-    private void EndDrift()
-    {
-        isDrifting = false;
-        foreach (TrailRenderer skidmarkRenderer in skidmarks)
-        {
-            skidmarkRenderer.emitting = false;
+            foreach (var airLine in airmarks)
+            {
+                airLine.emitting = false;
+                airLine.time = 0;
+            }
         }
     }
 }

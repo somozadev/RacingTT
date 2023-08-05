@@ -19,7 +19,10 @@ namespace GroundEffects
 
         private void ApplyEffect(Collider other)
         {
-            other.GetComponent<CarEffectsController>().ApplyEffect(carEffect);
+            if (other.GetComponent<CarEffectsController>())
+                other.GetComponent<CarEffectsController>().ApplyEffect(carEffect);
+            else
+                other.GetComponentInParent<CarEffectsController>().ApplyEffect(carEffect);
         }
     }
 }
