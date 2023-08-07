@@ -5,11 +5,12 @@ using UnityEngine;
 public class CarStats
 {
     public CarStatsType type;
-    
+
     public float acceleration;
     public float turnForce;
     public float maxSpeed;
     public float maxAngularVelocity;
+    public float minAngularVelocity;
     public float grip;
 
     public float minVelForDrift = 0.5f;
@@ -17,11 +18,13 @@ public class CarStats
     public float maxDriftSpeed;
     public float driftTurnForce;
     public float maxDriftAngularVelocity;
+    public float minDriftAngularVelocity;
     public float driftGrip;
 
 
     private float initialGrip;
     private float initialDriftGrip;
+
     public void SetGrip(float gripValue, float driftGripValue)
     {
         initialGrip = grip;
@@ -35,6 +38,7 @@ public class CarStats
         grip = initialGrip;
         driftGrip = initialDriftGrip;
     }
+
     public void SetDefaultValues()
     {
         type = CarStatsType.Default;
@@ -42,14 +46,17 @@ public class CarStats
         turnForce = 30;
         maxSpeed = 360;
         maxAngularVelocity = 60;
+        minAngularVelocity = 15;
         grip = 4;
         minVelForDrift = 0.5f;
         driftAcc = 65;
         maxDriftSpeed = 400;
         driftTurnForce = 30;
         maxDriftAngularVelocity = 70;
+        minDriftAngularVelocity = 17;
         driftGrip = 5;
     }
+
     public void SetAlbertoDefaultValues()
     {
         type = CarStatsType.AlbertoDefault;
@@ -57,27 +64,31 @@ public class CarStats
         turnForce = 30;
         maxSpeed = 360;
         maxAngularVelocity = 25;
+        minAngularVelocity = 6;
         grip = 4;
         minVelForDrift = 0.5f;
         driftAcc = 65;
         maxDriftSpeed = 400;
         driftTurnForce = 30;
         maxDriftAngularVelocity = 30;
+        minDriftAngularVelocity = 8;
         driftGrip = 5;
     }
 
     public void SaveCarStatsToJson()
     {
         string jsonData = JsonUtility.ToJson(this);
-       
-        string filePath = Application.persistentDataPath + "/" + Enum.GetName(typeof(CarStatsType), type) +"_carStats.json";
+
+        string filePath = Application.persistentDataPath + "/" + Enum.GetName(typeof(CarStatsType), type) +
+                          "_carStats.json";
         System.IO.File.WriteAllText(filePath, jsonData);
         Debug.Log("CarStats serialized and saved to " + filePath);
     }
 
     public void LoadCarStats()
     {
-        string filePath = Application.persistentDataPath + "/" + Enum.GetName(typeof(CarStatsType), type) + "_carStats.json";
+        string filePath = Application.persistentDataPath + "/" + Enum.GetName(typeof(CarStatsType), type) +
+                          "_carStats.json";
         if (System.IO.File.Exists(filePath))
         {
             string jsonData = System.IO.File.ReadAllText(filePath);
@@ -86,8 +97,11 @@ public class CarStats
         }
         else
         {
-            SaveCarStatsToJson();
-            Debug.LogError("File not found: " + filePath);
+            if (type == CarStatsType.Default)
+            {
+                SetDefaultValues();
+                SaveCarStatsToJson();
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ using Debug = UnityEngine.Debug;
 
 public class CarController : MonoBehaviour
 {
+    [SerializeField] private float downwardForce = Physics.gravity.magnitude;
+
     [SerializeField] private GameObject[] lights = new GameObject[4];
     [SerializeField] private bool isLightsOn;
 
@@ -23,23 +25,24 @@ public class CarController : MonoBehaviour
     [SerializeField] private bool isDrivingForward;
     [SerializeField] private bool isTricksEnabled;
     [SerializeField] private bool skidmarksActive;
-
+    [SerializeField] private bool onlyStops;
     public bool canSteer { get; set; }
     public bool canAccel { get; set; }
 
-    [SerializeField] private float driftGrip;
 
     [SerializeField] private float accelerationInput;
     [SerializeField] private float reverseInput;
     [SerializeField] private float resetInput;
     [SerializeField] private Vector2 steeringInput;
-    public Vector2 velocity { get; private set; }
+
+    [SerializeField] private Vector2 velocity;
     public float driftVal { get; private set; }
     public float speedVal { get; private set; }
     public bool isDrifting { get; private set; }
     public Rigidbody rb { get; private set; }
-
     public CarStats CarStats => carStats;
+
+    private Vector3 accelerationDirection;
 
     private void OnDisable()
     {
@@ -76,6 +79,20 @@ public class CarController : MonoBehaviour
         RotateFrontWheels();
     }
 
+    private void FixedUpdate()
+    {
+        if (!isDrivingEnabled)
+            return;
+        CalculateDrift();
+        ExtraGravity();
+        Vector3 direction = CalculateDirection();
+        CalculateMovement(direction);
+        CalculateAirLines();
+        CalculateRotation();
+        CalculateAirTricks();
+        velocity = rb.velocity;
+    }
+
     private void ResetCar()
     {
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
@@ -97,7 +114,6 @@ public class CarController : MonoBehaviour
         }
     }
 
-
     private void RotateFrontWheels()
     {
         float targetSteeringAngle = steeringInput.x * maxSteeringAngle;
@@ -111,21 +127,6 @@ public class CarController : MonoBehaviour
         }
     }
 
-
-    private void FixedUpdate()
-    {
-        if (!isDrivingEnabled)
-            return;
-        CalculateDrift();
-        ExtraGravity();
-        Vector3 direction = CalculateDirection();
-        CalculateMovement(direction);
-        CalculateAirLines();
-        CalculateRotation();
-        CalculateAirTricks();
-        velocity = rb.velocity;
-    }
-
     private void CalculateRotation()
     {
         if (carSuspension.isGrounded)
@@ -136,22 +137,26 @@ public class CarController : MonoBehaviour
                 steeringInput = -steeringInput;
             }
 
-            float num4 = (isDrifting ? carStats.driftTurnForce : carStats.turnForce);
-            rb.AddTorque(transform.up * steeringInput.x * num4, ForceMode.Acceleration);
-            float num5 = (isDrifting ? carStats.maxDriftAngularVelocity : carStats.maxAngularVelocity);
-            rb.angularVelocity = new Vector3(rb.angularVelocity.x, num5 * steeringInput.x, rb.angularVelocity.z);
+            float linearSpeed = rb.velocity.magnitude;
+            float normalizedSpeed = 1.0f - Mathf.Clamp01((linearSpeed - carStats.minAngularVelocity) /
+                                                         (carStats.maxAngularVelocity - carStats.minAngularVelocity));
+            float angularSpeed = Mathf.Lerp(carStats.minAngularVelocity, carStats.maxAngularVelocity, normalizedSpeed);
+            // Debug.Log(angularSpeed);
+            // float num4 = (isDrifting ? carStats.driftTurnForce : carStats.turnForce);
+            // // rb.AddTorque(transform.up * steeringInput.x * normalizedSpeed * num4, ForceMode.Acceleration);
+            // // float num5 = (isDrifting ? carStats.maxDriftAngularVelocity : carStats.maxAngularVelocity);
+            rb.angularVelocity =
+                new Vector3(rb.angularVelocity.x, angularSpeed * steeringInput.x, rb.angularVelocity.z);
         }
 
         float value = Vector3.SignedAngle(rb.velocity, base.transform.forward, Vector3.up);
-        driftVal = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(-80f, 80f, value));
+        driftVal = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(-90f, 90f, value));
         if (rb.velocity.magnitude > carStats.minVelForDrift)
         {
-            rb.AddForce(transform.right * driftVal * (isDrifting ? driftGrip : carStats.grip),
+            rb.AddForce(transform.right * driftVal * (isDrifting ? carStats.driftGrip : carStats.grip),
                 ForceMode.Acceleration);
         }
     }
-
-    private Vector3 accelerationDirection;
 
     private void CalculateMovement(Vector3 direction)
     {
@@ -167,11 +172,20 @@ public class CarController : MonoBehaviour
 
             if (reverseInput > 0f)
             {
-                float num2 = (isDrifting ? carStats.driftAcc : carStats.acceleration);
-                if (rb.velocity.magnitude > 0)
-                    rb.AddForce(-direction * num2 * reverseInput, ForceMode.Acceleration);
-                if (rb.velocity.magnitude < 0)
-                    rb.AddForce(direction * num2 * reverseInput, ForceMode.Acceleration);
+                if (onlyStops)
+                {
+                    float currentSpeed = rb.velocity.magnitude;
+                    float brakeForce = currentSpeed * 3f * reverseInput;
+                    rb.AddForce(-rb.velocity.normalized * brakeForce, ForceMode.Acceleration);
+                }
+                else
+                {
+                    float num2 = (isDrifting ? carStats.driftAcc : carStats.acceleration);
+                    if (rb.velocity.magnitude > 0)
+                        rb.AddForce(-direction * num2 * reverseInput, ForceMode.Acceleration);
+                    if (rb.velocity.magnitude < 0)
+                        rb.AddForce(direction * num2 * reverseInput, ForceMode.Acceleration);
+                }
             }
 
             accelerationDirection = direction.normalized;
@@ -206,8 +220,6 @@ public class CarController : MonoBehaviour
 
         return direction;
     }
-
-    [SerializeField] private float downwardForce = Physics.gravity.magnitude;
 
     private void ExtraGravity()
     {
