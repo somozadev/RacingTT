@@ -1,5 +1,260 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1367219731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1367219733}
+  - component: {fileID: 1367219735}
+  - component: {fileID: 1367219734}
+  - component: {fileID: 1367219737}
+  - component: {fileID: 1367219736}
+  - component: {fileID: 1367219740}
+  - component: {fileID: 1367219739}
+  - component: {fileID: 1367219738}
+  - component: {fileID: 1367219742}
+  - component: {fileID: 1367219741}
+  m_Layer: 0
+  m_Name: GhostRunner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1367219733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1395094589770972113}
+  m_Father: {fileID: 4199271355330474095}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1367219735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 838af7c1d856c5642b23bccd09229edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 3398868548707219116}
+  ghost: {fileID: 11400000, guid: 5d3ab8306d918ea43b036525eb75ea51, type: 2}
+--- !u!114 &1367219734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88a8fd7c214942dc92e89bc871b11f2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1395094589770972113}
+  ghost: {fileID: 11400000, guid: 5d3ab8306d918ea43b036525eb75ea51, type: 2}
+--- !u!114 &1367219737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab575c0b1b24fbbb3b96f052017d4d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startRecordingEvent: {fileID: 11400000, guid: 47f9d9841e56cc84e8e6329bb6c2f18d,
+    type: 2}
+  startReplayingEvent: {fileID: 11400000, guid: 514715194908f324ca46dc1a7a82c12f,
+    type: 2}
+  stopRecordingEvent: {fileID: 11400000, guid: 07e89c2e521d1d14d984d31b4f03e527, type: 2}
+  stopReplayingEvent: {fileID: 11400000, guid: 8178b3ac7bb693e42a1baf51595f6473, type: 2}
+--- !u!114 &1367219736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 47f9d9841e56cc84e8e6329bb6c2f18d, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219735}
+        m_TargetAssemblyTypeName: GhostRunner.GhostRecorder, Assembly-CSharp
+        m_MethodName: StartRecording
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1367219740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 514715194908f324ca46dc1a7a82c12f, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219734}
+        m_TargetAssemblyTypeName: GhostRunner.GhostReplayer, Assembly-CSharp
+        m_MethodName: StartReplaying
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1367219739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 07e89c2e521d1d14d984d31b4f03e527, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219735}
+        m_TargetAssemblyTypeName: GhostRunner.GhostRecorder, Assembly-CSharp
+        m_MethodName: StopRecording
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1367219738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 8178b3ac7bb693e42a1baf51595f6473, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219734}
+        m_TargetAssemblyTypeName: GhostRunner.GhostReplayer, Assembly-CSharp
+        m_MethodName: StopReplaying
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1367219742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 710ac69a0c7fe7549ab7199fdca3ba62, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219737}
+        m_TargetAssemblyTypeName: GhostRunner.GhostManager, Assembly-CSharp
+        m_MethodName: StartRun
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1367219741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367219731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5849208ba38575c45a2a210baa8fc6bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 160b9a2b4286eec4bb152a32c91e1683, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1367219737}
+        m_TargetAssemblyTypeName: GhostRunner.GhostManager, Assembly-CSharp
+        m_MethodName: EndRun
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &585016630823285570
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,7 +418,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3080027033851968365}
-  m_LocalRotation: {x: 0.31622773, y: -0.00007472466, z: 0.000024908217, w: 0.9486833}
+  m_LocalRotation: {x: 0.31622773, y: -0.00007469198, z: 0.000024897323, w: 0.9486833}
   m_LocalPosition: {x: 0.0015749893, y: 7.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -548,7 +803,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4318713973501758045}
-  m_LocalRotation: {x: -0, y: -2.8376235e-10, z: 2.1282176e-10, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5677,9 +5932,90 @@ Transform:
   - {fileID: 3398868548707219116}
   - {fileID: 5758470759265796735}
   - {fileID: 7122058015872481034}
+  - {fileID: 1367219733}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &104992772
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1367219733}
+    m_Modifications:
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197086, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_Name
+      value: GhostCar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395094589800197086, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0, type: 3}
+--- !u!4 &1395094589770972113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1395094589800197077, guid: 459d6dc11ffa0904a8b8bd8c5871b2a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 104992772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5147071408938825098
 PrefabInstance:
   m_ObjectHideFlags: 0

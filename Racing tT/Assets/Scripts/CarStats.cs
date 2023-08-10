@@ -22,13 +22,25 @@ public class CarStats
     public float driftGrip;
 
 
-    private float initialGrip;
-    private float initialDriftGrip;
+   [SerializeField]private float initialGrip;
+   [SerializeField]private float initialDriftGrip;
+
+    public void SpeedBoost(float speedValue)
+    {
+        maxSpeed += speedValue;
+        acceleration += speedValue/2;
+    } 
+    public void ResetSpeed(float speedValue)
+    {
+        maxSpeed -= speedValue;
+        acceleration -= speedValue/2;
+
+    } 
 
     public void SetGrip(float gripValue, float driftGripValue)
     {
         initialGrip = grip;
-        initialDriftGrip = driftGripValue;
+        initialDriftGrip = driftGrip;
         grip = gripValue;
         driftGrip = driftGripValue;
     }

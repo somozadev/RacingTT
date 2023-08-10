@@ -18,6 +18,7 @@ public class CarEffectsController : MonoBehaviour
         switch (carEffects)
         {
             case CarEffects.SpeedEffect:
+                StartCoroutine(SpeedBoost());
                 break;
             case CarEffects.SlideEffect:
                 StartCoroutine(NoGrip());
@@ -33,10 +34,22 @@ public class CarEffectsController : MonoBehaviour
         }
     }
 
+    private IEnumerator SpeedBoost()
+    {
+        float elapsedTime = 0f;
+        carController.CarStats.SpeedBoost(50f);
+        while (elapsedTime < 5f)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        carController.CarStats.ResetSpeed(50f);
+    }
+
     private IEnumerator NoGrip()
     {
         float elapsedTime = 0f;
-        carController.CarStats.SetGrip(0,0);
+        carController.CarStats.SetGrip(-80,-80);
         while (elapsedTime < 5f)
         {
             elapsedTime += Time.deltaTime;
