@@ -29,9 +29,9 @@ namespace GhostRunner
 
         private void Update()
         {
+            timerValue += Time.deltaTime;
             if (!ghost.isRecording) return;
             timer += Time.deltaTime;
-            timerValue += Time.deltaTime;
             if (!ghost.isRecording || !(timer >= 1 / ghost.recordFrequency)) return;
             ghost.TimestampCurrent.Add(timerValue);
             ghost.PosCurrent.Add(target.position);
