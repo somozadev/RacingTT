@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace GhostRunner
@@ -10,38 +11,25 @@ namespace GhostRunner
         public bool isReplaying;
         public float recordFrequency = 2f;
 
-        public GhostData ghostDataCurrent;
-        public GhostData ghostDataSaved;
-        public List<float> TimestampSaved => ghostDataSaved.timestamp;
-        public List<Vector3> PosSaved => ghostDataSaved.pos;
-        public List<Quaternion> RotSaved => ghostDataSaved.rot;
+        public GhostData ghostData;
 
-        public List<float> TimestampCurrent => ghostDataCurrent.timestamp;
-        public List<Vector3> PosCurrent => ghostDataCurrent.pos;
-        public List<Quaternion> RotCurrent => ghostDataCurrent.rot;
+        public List<float> Timestamp => ghostData.timestamp;
+        public List<Vector3> Pos => ghostData.pos;
+        public List<Quaternion> Rot => ghostData.rot;
 
         public void ResetCurrent()
         {
-            TimestampCurrent.Clear();
-            PosCurrent.Clear();
-            RotCurrent.Clear();
+            Timestamp.Clear();
+            Pos.Clear();
+            Rot.Clear();
         }
 
-        public void Clear()
+        public void Clear(string path)
         {
             isRecording = false;
             isRecording = false;
-            ghostDataCurrent = new GhostData();
-        }
-
-        public void Serialize()
-        {
-            //todo
-        }
-
-        public void Deserialize()
-        {
-            //todo
+            ghostData.Serialize(path + $"lastReplaySaved{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.sghost");
+            ghostData = new GhostData();
         }
     }
 }

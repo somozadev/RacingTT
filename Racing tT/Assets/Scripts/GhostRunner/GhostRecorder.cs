@@ -1,15 +1,21 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 namespace GhostRunner
 {
     public class GhostRecorder : MonoBehaviour
     {
+        [SerializeField] private string path;
         [SerializeField] private Transform target;
         [SerializeField] private Ghost ghost;
         private float timer;
         private float timerValue;
 
+        private void Awake()
+        {
+            path = Application.persistentDataPath + "/";
+            ghost.isRecording = false;
+        }
 
         public void StartRecording()
         {
@@ -21,7 +27,7 @@ namespace GhostRunner
 
         public void StopRecording()
         {
-            ghost.ghostDataSaved.SetGhostData(ghost.ghostDataCurrent);
+            ghost.ghostData.Serialize(path + $"GhostSave_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.ghost");
             ghost.isRecording = false;
             timerValue = 0f;
             timer = 0f;
@@ -33,13 +39,10 @@ namespace GhostRunner
             if (!ghost.isRecording) return;
             timer += Time.deltaTime;
             if (!ghost.isRecording || !(timer >= 1 / ghost.recordFrequency)) return;
-            ghost.TimestampCurrent.Add(timerValue);
-            ghost.PosCurrent.Add(target.position);
-            ghost.RotCurrent.Add(target.rotation);
+            ghost.Timestamp.Add(timerValue);
+            ghost.Pos.Add(target.position);
+            ghost.Rot.Add(target.rotation);
             timer = 0f;
         }
-
-        private void OnApplicationQuit()=> ghost.Clear();
-        
     }
 }

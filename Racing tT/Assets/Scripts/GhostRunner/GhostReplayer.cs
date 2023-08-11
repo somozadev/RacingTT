@@ -1,41 +1,89 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace GhostRunner
 {
     public class GhostReplayer : MonoBehaviour
     {
+        [SerializeField] private string path;
         [SerializeField] private Transform target;
         [SerializeField] private Ghost ghost;
         private float timerValue;
         private int timestamp0;
         private int timestamp1;
 
+        [SerializeField] private bool replayAll = false;
+        [SerializeField] private List<GhostData> datas;
+        [SerializeField] private List<Transform> ghostCars;
+        [SerializeField] private string[] files;
+
+        private void Awake()
+        {
+            path = Application.persistentDataPath + "/";
+            ghost.isReplaying = false;
+        }
+
+
         public void StartReplaying()
         {
-            if (ghost.ghostDataSaved.IsEmpty()) return;
+            ReplayAllSavedFiles();
+            if (ghost.ghostData.IsEmpty()) return;
             ghost.isReplaying = true;
             timerValue = 0f;
-            target.gameObject.SetActive(true);
+        }
+
+        private void ReplayAllSavedFiles()
+        {
+            files = Directory.GetFiles(path, "GhostSave_*");
+            foreach (var file in files)
+            {
+                var ghostCar = Instantiate(target, transform.position, quaternion.identity, transform);
+                ghostCars.Add(ghostCar);
+                ghostCar.gameObject.SetActive(true);
+                datas.Add(GhostData.Deserialize(file));
+                replayAll = true;
+                ghost.isReplaying = true;
+            }
         }
 
         public void StopReplaying()
         {
             ghost.isReplaying = false;
             timerValue = 0f;
-            target.gameObject.SetActive(false);
+            StopReplayAllSavedFiles();
+        }
+
+        private void StopReplayAllSavedFiles()
+        {
+            replayAll = false;
+            foreach (var car in ghostCars)
+                Destroy(car.gameObject);
+            ghostCars.Clear();
+            datas.Clear();
         }
 
         private void Update()
         {
             timerValue += Time.deltaTime;
             if (!ghost.isReplaying) return;
-            GetIndex();
-            SetTransform();
+
+            if (replayAll)
+            {
+                for (int i = 0; i < datas.Count; i++)
+                {
+                    GetIndex(datas[i]);
+                    SetTransform(datas[i], ghostCars[i]);
+                }
+            }
         }
 
-        private void GetIndex()
+        private void GetIndex(GhostData ghost)
         {
-            var timestamp = ghost.TimestampSaved;
+            var timestamp = ghost.timestamp;
+            if (timestamp.Count <= 0) return;
 
             for (var i = 0; i < timestamp.Count - 2; i++)
             {
@@ -56,12 +104,12 @@ namespace GhostRunner
             timestamp1 = timestamp.Count - 1;
         }
 
-
-        private void SetTransform()
+        private void SetTransform(GhostData ghost, Transform target)
         {
-            var timestamp = ghost.TimestampSaved;
-            var pos = ghost.PosSaved;
-            var rot = ghost.RotSaved;
+            var timestamp = ghost.timestamp;
+            if (timestamp.Count <= 0) return;
+            var pos = ghost.pos;
+            var rot = ghost.rot;
             var trfRef = target.transform;
 
             if (timestamp0 == timestamp1)
@@ -78,6 +126,12 @@ namespace GhostRunner
             }
         }
 
-        private void OnApplicationQuit() => ghost.Clear();
+
+        private void OnApplicationQuit()
+        {
+            ghost.Clear(path);
+            foreach (var file in files)
+                File.Delete(file);
+        }
     }
 }

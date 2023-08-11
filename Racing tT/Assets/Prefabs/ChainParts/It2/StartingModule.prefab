@@ -110,6 +110,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Start
       objectReference: {fileID: 0}
+    - target: {fileID: 773949694793536935, guid: a765cb22e8bff54468a2749644de2f66,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 575.85583
+      objectReference: {fileID: 0}
+    - target: {fileID: 773949694793536935, guid: a765cb22e8bff54468a2749644de2f66,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 287.92792
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a765cb22e8bff54468a2749644de2f66, type: 3}
 --- !u!4 &4385084677075116906 stripped
@@ -125,6 +135,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5611522325264890042}
     m_Modifications:
+    - target: {fileID: 146016428590936149, guid: c43b24e21f3df3d4f9695eb7d39acbdc,
+        type: 3}
+      propertyPath: spawnPoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2986122354213368123, guid: c43b24e21f3df3d4f9695eb7d39acbdc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3836351105183657716, guid: c43b24e21f3df3d4f9695eb7d39acbdc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8597152303040362933, guid: c43b24e21f3df3d4f9695eb7d39acbdc,
         type: 3}
       propertyPath: m_RootOrder
