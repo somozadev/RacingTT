@@ -2615,6 +2615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c692ca391b6779547bfd4f3103b3308f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downwardForce: -40
   lights:
   - {fileID: 1976228349271236548}
   - {fileID: 5904240716232786424}
@@ -2633,13 +2634,17 @@ MonoBehaviour:
     turnForce: 0
     maxSpeed: 0
     maxAngularVelocity: 0
+    minAngularVelocity: 0
     grip: 0
     minVelForDrift: 0.5
     driftAcc: 0
     maxDriftSpeed: 0
     driftTurnForce: 0
     maxDriftAngularVelocity: 0
+    minDriftAngularVelocity: 0
     driftGrip: 0
+    initialGrip: 0
+    initialDriftGrip: 0
   skidmarks:
   - {fileID: 7513454170334584069}
   - {fileID: 7513454170994175868}
@@ -2654,12 +2659,12 @@ MonoBehaviour:
   isDrivingForward: 1
   isTricksEnabled: 0
   skidmarksActive: 1
-  driftGrip: 0
+  onlyStops: 0
   accelerationInput: 0
   reverseInput: 0
   resetInput: 0
   steeringInput: {x: 0, y: 0}
-  downwardForce: -40
+  velocity: {x: 0, y: 0}
 --- !u!114 &7513454172041036583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2727,7 +2732,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7513454172041036589}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2f8ea98a9274ee345a97768f84ba4df9, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2

@@ -15,11 +15,7 @@ MonoBehaviour:
   isRecording: 0
   isReplaying: 0
   recordFrequency: 8
-  ghostDataCurrent:
-    timestamp: []
-    pos: []
-    rot: []
-  ghostDataSaved:
+  ghostData:
     timestamp: []
     pos: []
     rot: []
