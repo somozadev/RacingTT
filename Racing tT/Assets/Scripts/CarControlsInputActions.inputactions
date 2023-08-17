@@ -33,6 +33,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "CameraRotation",
+                    "type": "Value",
+                    "id": "045a101a-979c-40d4-ae3a-bacf05445eb7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Reseting",
                     "type": "Button",
                     "id": "9c7a5487-d4b3-4278-8768-95f705c1a98d",
@@ -234,6 +243,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Claxon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eff8faa1-a08e-4027-9d9a-5fa128f7fe24",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "91952a9e-8d52-48fa-b8c9-fe78fa2830f1",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ab387ed-9b88-4d02-bbf2-cc2ce5ef4592",
+                    "path": "<Joystick>/{Hatswitch}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraRotation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

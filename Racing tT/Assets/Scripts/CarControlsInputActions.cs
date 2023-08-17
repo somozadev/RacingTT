@@ -55,6 +55,15 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""CameraRotation"",
+                    ""type"": ""Value"",
+                    ""id"": ""045a101a-979c-40d4-ae3a-bacf05445eb7"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Reseting"",
                     ""type"": ""Button"",
                     ""id"": ""9c7a5487-d4b3-4278-8768-95f705c1a98d"",
@@ -258,6 +267,39 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
                     ""action"": ""Claxon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eff8faa1-a08e-4027-9d9a-5fa128f7fe24"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""91952a9e-8d52-48fa-b8c9-fe78fa2830f1"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ab387ed-9b88-4d02-bbf2-cc2ce5ef4592"",
+                    ""path"": ""<Joystick>/{Hatswitch}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -275,6 +317,7 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
         m_CarControls_Acceleration = m_CarControls.FindAction("Acceleration", throwIfNotFound: true);
         m_CarControls_ReverseAcceleration = m_CarControls.FindAction("ReverseAcceleration", throwIfNotFound: true);
         m_CarControls_Steering = m_CarControls.FindAction("Steering", throwIfNotFound: true);
+        m_CarControls_CameraRotation = m_CarControls.FindAction("CameraRotation", throwIfNotFound: true);
         m_CarControls_Reseting = m_CarControls.FindAction("Reseting", throwIfNotFound: true);
         m_CarControls_Lights = m_CarControls.FindAction("Lights", throwIfNotFound: true);
         m_CarControls_Claxon = m_CarControls.FindAction("Claxon", throwIfNotFound: true);
@@ -342,6 +385,7 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
     private readonly InputAction m_CarControls_Acceleration;
     private readonly InputAction m_CarControls_ReverseAcceleration;
     private readonly InputAction m_CarControls_Steering;
+    private readonly InputAction m_CarControls_CameraRotation;
     private readonly InputAction m_CarControls_Reseting;
     private readonly InputAction m_CarControls_Lights;
     private readonly InputAction m_CarControls_Claxon;
@@ -352,6 +396,7 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
         public InputAction @Acceleration => m_Wrapper.m_CarControls_Acceleration;
         public InputAction @ReverseAcceleration => m_Wrapper.m_CarControls_ReverseAcceleration;
         public InputAction @Steering => m_Wrapper.m_CarControls_Steering;
+        public InputAction @CameraRotation => m_Wrapper.m_CarControls_CameraRotation;
         public InputAction @Reseting => m_Wrapper.m_CarControls_Reseting;
         public InputAction @Lights => m_Wrapper.m_CarControls_Lights;
         public InputAction @Claxon => m_Wrapper.m_CarControls_Claxon;
@@ -373,6 +418,9 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
             @Steering.started += instance.OnSteering;
             @Steering.performed += instance.OnSteering;
             @Steering.canceled += instance.OnSteering;
+            @CameraRotation.started += instance.OnCameraRotation;
+            @CameraRotation.performed += instance.OnCameraRotation;
+            @CameraRotation.canceled += instance.OnCameraRotation;
             @Reseting.started += instance.OnReseting;
             @Reseting.performed += instance.OnReseting;
             @Reseting.canceled += instance.OnReseting;
@@ -395,6 +443,9 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
             @Steering.started -= instance.OnSteering;
             @Steering.performed -= instance.OnSteering;
             @Steering.canceled -= instance.OnSteering;
+            @CameraRotation.started -= instance.OnCameraRotation;
+            @CameraRotation.performed -= instance.OnCameraRotation;
+            @CameraRotation.canceled -= instance.OnCameraRotation;
             @Reseting.started -= instance.OnReseting;
             @Reseting.performed -= instance.OnReseting;
             @Reseting.canceled -= instance.OnReseting;
@@ -435,6 +486,7 @@ public partial class @CarControlsInputActions: IInputActionCollection2, IDisposa
         void OnAcceleration(InputAction.CallbackContext context);
         void OnReverseAcceleration(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
+        void OnCameraRotation(InputAction.CallbackContext context);
         void OnReseting(InputAction.CallbackContext context);
         void OnLights(InputAction.CallbackContext context);
         void OnClaxon(InputAction.CallbackContext context);
